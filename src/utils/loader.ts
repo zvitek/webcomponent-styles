@@ -1,8 +1,8 @@
 import { HTMLStencilElement } from '@stencil/core/internal';
 
 export async function loadDesignSystemLibrary(target: HTMLStencilElement) {
-  await loadExternalScripts('https://newpvsstorage.z16.web.core.windows.net/cdn/0.0.1/build/core.esm.js', true, target);
-  setTimeout(() => loadExternalScripts('https://newpvsstorage.z16.web.core.windows.net/cdn/0.0.1/build/core.js', false, target), 500)
+  await loadExternalScripts('https://newpvsstorage.z16.web.core.windows.net/cdn/0.0.10/build/core.esm.js', true, target);
+  //await loadExternalScripts('https://newpvsstorage.z16.web.core.windows.net/cdn/0.0.10/build/core.js', false, target)
 }
 
 export async function loadExternalScripts(scriptUrl: string, asModule: boolean = true, target: HTMLStencilElement) {

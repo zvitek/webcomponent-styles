@@ -1,13 +1,9 @@
-@import url("https://newpvsstorage.z16.web.core.windows.net/cdn/0.0.1/build/core.css?v=2");
-@import url("https://newpvsstorage.z16.web.core.windows.net/cdn/0.0.1/build/fonts.css?v=2");
+@import url("https://newpvsstorage.z16.web.core.windows.net/cdn/0.0.10/build/core.css?v=3");
+/* @import url("https://newpvsstorage.z16.web.core.windows.net/cdn/0.0.10/build/fonts.css?v=2"); */
 
 :host {
   font-family: "Roboto", sans-serif;
-  font-weight: var(--gov-text-m-font-weight);
-  font-size: var(--gov-text-m-font-size);
-  line-height: var(--gov-text-m-line-height);
-  letter-spacing: var(--gov-text-m-letter-spacing);
+  font-size: 16px !important;
   margin: 0;
   padding: 0;
-  color: var(--gov-bg--secondary-500);
 }
