@@ -1,11 +1,16 @@
 import { h } from '@stencil/core';
 import { OtazkaDotazniku } from '../../schema/generated/types';
-import { Answer, AnswerError } from '../../schema/Answer';
+import { Answer, AnswerControl, AnswerError } from '../../schema/Answer';
+import { isAdditionalAnswerAvailable } from '../../helpers/question';
+import { isQuestionAnswered } from '../../helpers/answer';
+import { isActiveAdditionalAnswer } from '../../helpers/control';
 
 export interface FormPartProps {
   onAnswerUpdate: (answer: Answer) => void;
+  onControlUpdate: (control: AnswerControl) => void;
   answers: Answer[];
   errors: AnswerError[];
+  controls: AnswerControl[];
 }
 
 export const formInputGenerator = (question: OtazkaDotazniku, props: FormPartProps) => {
@@ -22,14 +27,17 @@ export const formInputGenerator = (question: OtazkaDotazniku, props: FormPartPro
   }
 
   return (
-    <gov-form-control invalid={error ? true : false}>
-      <gov-form-label size='xl' slot='top'>{question.popisOtazky}</gov-form-label>
-      <gov-form-group>
-        {component}
-      </gov-form-group>
-      {renderMessage(question)}
-      {error}
-    </gov-form-control>
+    <div>
+      <gov-form-control invalid={error ? true : false}>
+        <gov-form-label size='xl' slot='top'>{question.popisOtazky}</gov-form-label>
+        <gov-form-group>
+          {component}
+        </gov-form-group>
+        {renderMessage(question)}
+        {error}
+      </gov-form-control>
+      {renderCustomAnswer(question, props)}
+    </div>
   );
 };
 
@@ -40,6 +48,10 @@ const formClassicRadioList = (question: OtazkaDotazniku, props: FormPartProps) =
       questionId: question.id,
       value: target.detail.value,
       additionalValue: undefined,
+    });
+    props.onControlUpdate({
+      questionId: question.id,
+      additional: false,
     });
   };
   const options = question.moznostOdpovedi.filter((answer) => answer.typ === false);
@@ -69,6 +81,10 @@ const formClassicCheckboxList = (question: OtazkaDotazniku, props: FormPartProps
       questionId: question.id,
       value: selected,
       additionalValue: undefined,
+    });
+    props.onControlUpdate({
+      questionId: question.id,
+      additional: false,
     });
   };
   const options = question.moznostOdpovedi.filter((answer) => answer.typ === false);
@@ -106,6 +122,55 @@ const renderMessage = (question: OtazkaDotazniku) => {
       {question.napoveda}
     </gov-form-message>
   );
+};
+
+const renderCustomAnswer = (question: OtazkaDotazniku, props: FormPartProps) => {
+  const answer = isQuestionAnswered(question, props.answers);
+  if (isAdditionalAnswerAvailable(question)) {
+    let isActive = isActiveAdditionalAnswer(question, props.controls);
+    const onChangeCustomValue = (e: CustomEvent) => {
+      props.onControlUpdate({
+        questionId: question.id,
+        additional: e.detail.checked,
+      });
+      if (e.detail.checked === false) {
+        props.onAnswerUpdate({
+          questionId: question.id,
+          value: question.moznostOdpovedi.length > 0 ? [] : undefined,
+          additionalValue: undefined,
+        });
+      }
+    };
+    const onChange = (e: CustomEvent) => {
+      const target = e.target as HTMLInputElement;
+      props.onAnswerUpdate({
+        questionId: question.id,
+        value: question.moznostOdpovedi.length > 0 ? [] : undefined,
+        additionalValue: target.value,
+      });
+    };
+    return (
+      <div>
+        <gov-form-control>
+          <gov-form-group>
+            <gov-form-checkbox checked={isActive} name={question.id + 'custom'} on-gov-change={onChangeCustomValue}>
+              <gov-form-label slot='label'>Vlastní odpověď</gov-form-label>
+            </gov-form-checkbox>
+          </gov-form-group>
+        </gov-form-control>
+
+        {(answer && answer.additionalValue) || isActive ? (
+          <div>
+            <gov-form-control>
+              <gov-form-group>
+                <gov-form-input name={question.id + 'custom-value'} on-gov-input={onChange}></gov-form-input>
+              </gov-form-group>
+            </gov-form-control>
+          </div>
+        ) : null}
+      </div>
+    );
+  }
 };
 
 const computeError = (question: OtazkaDotazniku, props: FormPartProps): string | null => {

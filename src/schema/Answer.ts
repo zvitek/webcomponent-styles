@@ -8,3 +8,8 @@ export interface AnswerError {
   questionId: number;
   message: string | undefined;
 }
+
+export interface AnswerControl {
+  questionId: number;
+  additional: boolean;
+}
