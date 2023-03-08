@@ -27,7 +27,7 @@ export const formInputGenerator = (question: OtazkaDotazniku, props: FormPartPro
   }
 
   return (
-    <div>
+    <div class={'mpsv-form-control'}>
       <gov-form-control invalid={error ? true : false}>
         <gov-form-label size='xl' slot='top'>{question.popisOtazky}</gov-form-label>
         <gov-form-group>
@@ -57,7 +57,7 @@ const formClassicRadioList = (question: OtazkaDotazniku, props: FormPartProps) =
   const options = question.moznostOdpovedi.filter((answer) => answer.typ === false);
   return options.map((option) => {
     return (
-      <gov-form-radio name={question.id} value={option.id} on-gov-change={onChange}>
+      <gov-form-radio name={question.id} value={option.id} on-gov-change={onChange} required={question.povinnostOdpovedi}>
         <gov-form-label slot='label'>{option.zneniOdpovedi}</gov-form-label>
       </gov-form-radio>
     );
@@ -91,7 +91,7 @@ const formClassicCheckboxList = (question: OtazkaDotazniku, props: FormPartProps
   return (
     options.map((option) => {
       return (
-        <gov-form-checkbox name={question.id + option.id} value={option.id} on-gov-change={onChange}>
+        <gov-form-checkbox name={question.id + option.id} value={option.id} on-gov-change={onChange} required={question.povinnostOdpovedi}>
           <gov-form-label slot='label'>{option.zneniOdpovedi}</gov-form-label>
         </gov-form-checkbox>
       );
@@ -109,12 +109,12 @@ const formClassicInput = (question: OtazkaDotazniku, props: FormPartProps) => {
     });
   };
   return (
-    <gov-form-input name={question.id} on-gov-input={onChange}></gov-form-input>
+    <gov-form-input name={question.id} on-gov-input={onChange} required={question.povinnostOdpovedi}></gov-form-input>
   );
 };
 
 const renderMessage = (question: OtazkaDotazniku) => {
-  if (String(question.napoveda).length === 0) {
+  if (String(question.napoveda).length === 0 || question.napoveda === undefined) {
     return null;
   }
   return (
@@ -150,7 +150,7 @@ const renderCustomAnswer = (question: OtazkaDotazniku, props: FormPartProps) => 
       });
     };
     return (
-      <div>
+      <div class={'mpsv-form-control__custom-answer'}>
         <gov-form-control>
           <gov-form-group>
             <gov-form-checkbox checked={isActive} name={question.id + 'custom'} on-gov-change={onChangeCustomValue}>
@@ -178,6 +178,7 @@ const computeError = (question: OtazkaDotazniku, props: FormPartProps): string |
   if (error) {
     return (
       <gov-form-message slot='bottom' variant='error'>
+        <gov-icon slot="icon" name="warning"></gov-icon>
         {error.message}
       </gov-form-message>
     );

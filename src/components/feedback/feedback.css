@@ -1,4 +1,4 @@
-@import url("https://newpvsstorage.z16.web.core.windows.net/cdn/0.0.10/build/core.css?v=3");
+@import url("https://newpvsstorage.z16.web.core.windows.net/cdn/0.0.10/build/core.css?v=4");
 /* @import url("https://newpvsstorage.z16.web.core.windows.net/cdn/0.0.10/build/fonts.css?v=2"); */
 
 :host {
@@ -6,4 +6,41 @@
   font-size: 16px !important;
   margin: 0;
   padding: 0;
+}
+
+.mpsv-form-control {
+  margin-bottom: 2em;
+}
+gov-form-radio:not(gov-form-radio:last-of-type), gov-form-checkbox:not(gov-form-checkbox:last-of-type) {
+  margin-bottom: 0.5em;
+}
+.mpsv-form-control__custom-answer {
+  margin-top: 1em;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+}
+.mpsv-form__success .gov-empty__icon {
+  background: linear-gradient(to bottom, var(--gov-color-success-200), var(--gov-color-success-100));
+  color: var(--gov-color-success-500);
+  width: 5em;
+  height: 5em;
+}
+.mpsv-form__success .gov-empty__icon > * {
+  width: 3em;
+  height: 3em;
+}
+.mpsv-form__success {
+  --gov-text-4xl-margin-bottom: 0em
+}
+.mpsv-form__success .gov-empty {
+  display: flex;
+  flex-direction: row;
+  gap: 2em;
+}
+@media screen and (max-width: 30em) {
+  .mpsv-form__success .gov-empty {
+    flex-direction: column;
+    gap: 0;
+  }
 }

@@ -1,9 +1,10 @@
-import { Component, h, Element, State } from '@stencil/core';
+import { Component, h, Element, State, Prop } from '@stencil/core';
 import { loadDesignSystemLibrary } from '../../utils/loader';
 import { formInputGenerator } from '../form/FormParts';
 import questions from '../../mock/questions';
 import { Answer, AnswerControl, AnswerError } from '../../schema/Answer';
 import { validateClientAnswers } from '../../helpers/answer';
+import { Dotaznik } from '../../schema/generated/types';
 
 @Component({
   tag: 'mpsv-feedback',
@@ -14,16 +15,21 @@ export class Feedback {
 
   @Element() host: HTMLMpsvFeedbackElement;
 
+  @Prop() presentation: 'standalone' | 'modal' = 'standalone';
+
   @State() govDesignSystemLoaded: boolean = false;
+  @State() success: boolean = false;
   @State() isDirty: boolean = false;
   @State() answers: Answer[] = [];
   @State() controls: AnswerControl[] = [];
   @State() errors: AnswerError[] = [];
+  @State() questionnaire: Dotaznik;
 
 
   async componentWillLoad() {
     await loadDesignSystemLibrary(this.host);
     this.govDesignSystemLoaded = true;
+    this.questionnaire = questions;
   }
 
   private validateQuestions() {
@@ -36,20 +42,72 @@ export class Feedback {
     if (this.govDesignSystemLoaded === false) {
       return;
     }
-    return (
-      <div>
-        <h2>{questions.nazev}</h2>
-        <p>{questions.popis}</p>
-        <form novalidate onSubmit={this.onSubmitHandler.bind(this)}>
-          {questions.otazkaDotazniku.map((question) => formInputGenerator(question, {
+
+    const renderSuccess = (closeButton: boolean = false) => {
+      return (
+        <div class={'mpsv-form__success'}>
+          <gov-empty>
+            <gov-icon slot='icon' name='doc-review' type='complex'></gov-icon>
+            <p class='gov-text--4xl gov-color--success-500 gov-mb--unset'>Odesláno</p>
+            <p class='gov-text--l gov-color--secondary-700'>
+              Děkujeme za odeslaní zpětná vazby.
+            </p>
+            <gov-spacer size={'l'}></gov-spacer>
+            {closeButton ? (
+              <gov-button variant={'primary'} type={'outlined'}>Zavřít</gov-button>
+            ) : null}
+          </gov-empty>
+        </div>
+      );
+    };
+    const formRender = () => {
+      return (
+        <form noValidate onSubmit={this.onSubmitHandler.bind(this)}>
+          {this.questionnaire.otazkaDotazniku.map((question) => formInputGenerator(question, {
             answers: this.answers,
             errors: this.errors,
             controls: this.controls,
             onAnswerUpdate: this.onAnswerUpdateHandler.bind(this),
             onControlUpdate: this.onAnswerControlHandler.bind(this),
           }))}
-          <gov-button variant={'primary'} type={'solid'} native-type={'submit'}>Odeslat</gov-button>
+          <gov-button
+            wcag-label={'Odeslat dotatník - ' + this.questionnaire.nazev}
+            variant={'primary'}
+            type={'solid'}
+            native-type={'submit'}
+            size={'l'}>
+            Odeslat
+          </gov-button>
         </form>
+      );
+    };
+
+    if (this.presentation === 'modal') {
+      return (
+        <gov-modal label={this.questionnaire.nazev} id='modal'
+                   wcag-close-label={'Zavřít dialog - ' + this.questionnaire.nazev} open>
+          {this.success ? (
+            renderSuccess(true)
+          ) : (
+            <div>
+              <p>{this.questionnaire.popis}</p>
+              {formRender()}
+            </div>
+          )}
+        </gov-modal>
+      );
+    }
+    return (
+      <div>
+        {this.success ? (
+          renderSuccess(true)
+        ) : (
+          <div>
+            <h2>{this.questionnaire.nazev}</h2>
+            <p>{this.questionnaire.popis}</p>
+            {formRender()}
+          </div>
+        )}
       </div>
     );
   }
@@ -58,6 +116,7 @@ export class Feedback {
     e.preventDefault();
     this.isDirty = true;
     if (this.validateQuestions()) {
+      this.success = true;
       console.log('submited');
     }
   };

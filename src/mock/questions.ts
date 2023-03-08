@@ -82,18 +82,12 @@ export default {
           poradi: 3,
           typ: false,
           zneniOdpovedi: 'Pistáciová'
-        },
-        {
-          id: 4,
-          poradi: 4,
-          typ: true,
-          zneniOdpovedi: undefined
         }
       ],
       napoveda: "Případně vyber nejbližší svému znamení",
       popisOtazky: "Jaká je tvoje oblíbená příchuť zmrzliny?",
       poradi: 0,
-      povinnostOdpovedi: true,
+      povinnostOdpovedi: false,
       viceOdpovedi: true
     }
   ],
