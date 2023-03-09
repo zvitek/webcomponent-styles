@@ -1,4 +1,4 @@
-import { Component, h, Element, State, Prop } from '@stencil/core';
+import { Component, h, Element, State, Prop, Host } from '@stencil/core';
 import { loadDesignSystemLibrary } from '../../utils/loader';
 import { formInputGenerator } from '../form/FormParts';
 import questions from '../../mock/questions';
@@ -112,21 +112,23 @@ export class Feedback {
 
     if (this.presentation === 'modal') {
       return (
-        <gov-modal label={this.questionnaire.nazev} id='modal'
-                   wcag-close-label={'Zavřít dialog - ' + this.questionnaire.nazev} open>
-          {this.success ? (
-            renderSuccess(true)
-          ) : (
-            <div>
-              {renderDescription()}
-              {formRender()}
-            </div>
-          )}
-        </gov-modal>
+        <Host>
+          <gov-modal label={this.questionnaire.nazev} id='modal'
+                     wcag-close-label={'Zavřít dialog - ' + this.questionnaire.nazev} open>
+            {this.success ? (
+              renderSuccess(true)
+            ) : (
+              <div>
+                {renderDescription()}
+                {formRender()}
+              </div>
+            )}
+          </gov-modal>
+        </Host>
       );
     }
     return (
-      <div>
+      <Host>
         {this.success ? (
           renderSuccess(true)
         ) : (
@@ -136,7 +138,7 @@ export class Feedback {
             {formRender()}
           </div>
         )}
-      </div>
+      </Host>
     );
   }
 
