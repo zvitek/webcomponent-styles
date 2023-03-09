@@ -3,13 +3,22 @@
 
 :host {
   font-family: "Roboto", sans-serif;
+  color: var(--gov-color-secondary);
   font-size: 16px !important;
   margin: 0;
   padding: 0;
 }
+:host * {
+  box-sizing: border-box;
+}
 
 .mpsv-form-control {
-  margin-bottom: 2em;
+  margin-bottom: 1.5em;
+  padding-bottom: 1.5em;
+  border-bottom: 1px solid var(--gov-color-secondary-400);
+}
+.mpsv-form-control:last-of-type {
+  border-bottom: 0 none;
 }
 gov-form-radio:not(gov-form-radio:last-of-type), gov-form-checkbox:not(gov-form-checkbox:last-of-type) {
   margin-bottom: 0.5em;
@@ -32,6 +41,9 @@ gov-form-radio:not(gov-form-radio:last-of-type), gov-form-checkbox:not(gov-form-
 }
 .mpsv-form__success {
   --gov-text-4xl-margin-bottom: 0em
+}
+gov-message {
+  margin-top: 1em;
 }
 .mpsv-form__success .gov-empty {
   display: flex;

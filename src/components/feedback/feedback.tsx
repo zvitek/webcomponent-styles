@@ -9,7 +9,7 @@ import { Dotaznik } from '../../schema/generated/types';
 @Component({
   tag: 'mpsv-feedback',
   styleUrl: 'feedback.css',
-  shadow: false,
+  shadow: true,
 })
 export class Feedback {
 
@@ -19,6 +19,8 @@ export class Feedback {
 
   @State() govDesignSystemLoaded: boolean = false;
   @State() success: boolean = false;
+  @State() error: boolean = false;
+  @State() processing: boolean = false;
   @State() isDirty: boolean = false;
   @State() answers: Answer[] = [];
   @State() controls: AnswerControl[] = [];
@@ -43,6 +45,17 @@ export class Feedback {
       return;
     }
 
+    const renderError = () => {
+      return (
+        <gov-message variant='error'>
+          <gov-icon name='info' slot='icon'></gov-icon>
+          <p class={'gov-color--error-500'}>
+            Formulář se nepodařilo odeslat, zkuste to, prosím, znovu anebo nás kontaktujte.
+          </p>
+        </gov-message>
+      );
+    };
+
     const renderSuccess = (closeButton: boolean = false) => {
       return (
         <div class={'mpsv-form__success'}>
@@ -60,6 +73,19 @@ export class Feedback {
         </div>
       );
     };
+
+    const renderDescription = () => {
+      if (String(this.questionnaire.popis).length === 0 || !this.questionnaire.popis) {
+        return null;
+      }
+      return (
+        <div>
+          <p>{this.questionnaire.popis}</p>
+          <gov-spacer size={'xl'}></gov-spacer>
+        </div>
+      );
+    };
+
     const formRender = () => {
       return (
         <form noValidate onSubmit={this.onSubmitHandler.bind(this)}>
@@ -75,9 +101,11 @@ export class Feedback {
             variant={'primary'}
             type={'solid'}
             native-type={'submit'}
+            loading={this.processing ? 'true' : 'false'}
             size={'l'}>
             Odeslat
           </gov-button>
+          {this.error ? renderError() : null}
         </form>
       );
     };
@@ -90,7 +118,7 @@ export class Feedback {
             renderSuccess(true)
           ) : (
             <div>
-              <p>{this.questionnaire.popis}</p>
+              {renderDescription()}
               {formRender()}
             </div>
           )}
@@ -104,7 +132,7 @@ export class Feedback {
         ) : (
           <div>
             <h2>{this.questionnaire.nazev}</h2>
-            <p>{this.questionnaire.popis}</p>
+            {renderDescription()}
             {formRender()}
           </div>
         )}
@@ -116,6 +144,7 @@ export class Feedback {
     e.preventDefault();
     this.isDirty = true;
     if (this.validateQuestions()) {
+      this.processing = true;
       this.success = true;
       console.log('submited');
     }

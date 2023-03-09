@@ -29,7 +29,7 @@ export const formInputGenerator = (question: OtazkaDotazniku, props: FormPartPro
   return (
     <div class={'mpsv-form-control'}>
       <gov-form-control invalid={error ? true : false}>
-        <gov-form-label size='xl' slot='top'>{question.popisOtazky}</gov-form-label>
+        <gov-form-label size='l' slot='top'>{question.popisOtazky}</gov-form-label>
         <gov-form-group>
           {component}
         </gov-form-group>
