@@ -1,7 +1,7 @@
 import { h } from '@stencil/core';
 import { OtazkaDotazniku } from '../../schema/generated/types';
 import { Answer, AnswerControl, AnswerError } from '../../schema/Answer';
-import { isAdditionalAnswerAvailable } from '../../helpers/question';
+import { isAdditionalAnswerAvailable, isRangeAvailable, isTextAvailable } from '../../helpers/question';
 import { isQuestionAnswered } from '../../helpers/answer';
 import { isActiveAdditionalAnswer } from '../../helpers/control';
 
@@ -15,14 +15,15 @@ export interface FormPartProps {
 
 export const formInputGenerator = (question: OtazkaDotazniku, props: FormPartProps) => {
   const error = computeError(question, props);
-  const numberOfOptions = question.moznostOdpovedi.length;
   let component;
-  if (question.viceOdpovedi) {
+  if (isRangeAvailable(question)) {
+    component = formRangeInput(question, props);
+  } else if (question.viceOdpovedi) {
     component = formClassicCheckboxList(question, props);
   } else {
     component = formClassicRadioList(question, props);
   }
-  if (numberOfOptions === 1) {
+  if (isTextAvailable(question)) {
     component = formClassicInput(question, props);
   }
 
@@ -54,10 +55,11 @@ const formClassicRadioList = (question: OtazkaDotazniku, props: FormPartProps) =
       additional: false,
     });
   };
-  const options = question.moznostOdpovedi.filter((answer) => answer.typ === false);
+  const options = question.moznostOdpovedi.filter((answer) => answer.typ === 'OTEVRENA');
   return options.map((option) => {
     return (
-      <gov-form-radio name={question.id} value={option.id} on-gov-change={onChange} required={question.povinnostOdpovedi}>
+      <gov-form-radio name={question.id} value={option.id} on-gov-change={onChange}
+                      required={question.povinnostOdpovedi}>
         <gov-form-label slot='label'>{option.zneniOdpovedi}</gov-form-label>
       </gov-form-radio>
     );
@@ -87,11 +89,12 @@ const formClassicCheckboxList = (question: OtazkaDotazniku, props: FormPartProps
       additional: false,
     });
   };
-  const options = question.moznostOdpovedi.filter((answer) => answer.typ === false);
+  const options = question.moznostOdpovedi.filter((answer) => answer.typ === 'UZAVRENA');
   return (
     options.map((option) => {
       return (
-        <gov-form-checkbox name={question.id + option.id} value={option.id} on-gov-change={onChange} required={question.povinnostOdpovedi}>
+        <gov-form-checkbox name={question.id + option.id} value={option.id} on-gov-change={onChange}
+                           required={question.povinnostOdpovedi}>
           <gov-form-label slot='label'>{option.zneniOdpovedi}</gov-form-label>
         </gov-form-checkbox>
       );
@@ -110,6 +113,22 @@ const formClassicInput = (question: OtazkaDotazniku, props: FormPartProps) => {
   };
   return (
     <gov-form-input name={question.id} on-gov-input={onChange} required={question.povinnostOdpovedi}></gov-form-input>
+  );
+};
+
+const formRangeInput = (question: OtazkaDotazniku, props: FormPartProps) => {
+  const option = question.moznostOdpovedi.find((answer) => answer.typ === 'SKALA');
+  const onChange = (e: CustomEvent) => {
+    const target = e.target as HTMLInputElement;
+    props.onAnswerUpdate({
+      questionId: question.id,
+      value: target.value,
+      additionalValue: undefined,
+    });
+  };
+  return (
+    <input type='range' min={option.minHodnota} max={option.maxHodnota} step={option.jednotka}
+           name={question.id.toString()} onChange={onChange} required={question.povinnostOdpovedi} />
   );
 };
 
@@ -173,12 +192,12 @@ const renderCustomAnswer = (question: OtazkaDotazniku, props: FormPartProps) => 
   }
 };
 
-const computeError = (question: OtazkaDotazniku, props: FormPartProps): string | null => {
+const computeError = (question: OtazkaDotazniku, props: FormPartProps) => {
   const error = props.errors.find((error) => error.questionId === question.id) || null;
   if (error) {
     return (
       <gov-form-message slot='bottom' variant='error'>
-        <gov-icon slot="icon" name="warning"></gov-icon>
+        <gov-icon slot='icon' name='warning'></gov-icon>
         {error.message}
       </gov-form-message>
     );

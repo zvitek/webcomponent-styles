@@ -1,4 +1,4 @@
-@import url("https://newpvsstorage.z16.web.core.windows.net/cdn/0.0.10/build/core.css?v=4");
+@import url("https://newpvsstorage.z16.web.core.windows.net/cdn/0.0.11/build/core.css?v=4");
 
 :host {
   font-family: "Roboto", sans-serif;
@@ -54,4 +54,75 @@ gov-message {
     flex-direction: column;
     gap: 0;
   }
+}
+
+input[type=range] {
+  -webkit-appearance: none;
+  margin: 18px 0;
+  width: 100%;
+  border: 2px solid transparent;
+}
+input[type=range]:focus-visible {
+  outline: none;
+  outline-offset: 1em;
+  border-radius: 3px;
+  border: 2px solid var(--gov-color-focus-base);
+}
+input[type=range]::-webkit-slider-runnable-track {
+  width: 100%;
+  height: 0.5em;
+  cursor: pointer;
+  box-shadow: none;
+  background: var(--gov-color-secondary-400);
+  border-radius: 3px;
+}
+input[type=range]::-webkit-slider-thumb {
+  box-shadow: none;
+  height: 16px;
+  width: 16px;
+  border-radius: 3px;
+  background: var(--gov-color-primary);
+  cursor: pointer;
+  -webkit-appearance: none;
+  margin-top: -5px;
+}
+input[type=range]::-moz-range-track {
+  width: 100%;
+  height: 0.5em;
+  cursor: pointer;
+  box-shadow: none;
+  background: var(--gov-color-primary);
+  border-radius: 3px;
+}
+input[type=range]::-moz-range-thumb {
+  box-shadow: none;
+  height: 1em;
+  width: 1em;
+  border-radius: 3px;
+  background: var(--gov-color-primary);
+  cursor: pointer;
+}
+input[type=range]::-ms-track {
+  width: 100%;
+  height: 0.5em;
+  cursor: pointer;
+  background: transparent;
+  border-color: transparent;
+  border-width: 16px 0;
+  color: transparent;
+}
+input[type=range]::-ms-fill-lower {
+  background: var(--gov-color-primary);
+  border-radius: 3px;
+}
+input[type=range]::-ms-fill-upper {
+  background: var(--gov-color-primary);
+  border-radius: 3px;
+}
+input[type=range]::-ms-thumb {
+  height: 1em;
+  width: 1em;
+  border-radius: 3px;
+  background: var(--gov-color-primary);
+  cursor: pointer;
 }

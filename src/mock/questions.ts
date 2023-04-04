@@ -18,15 +18,34 @@ export default {
         {
           id: 1,
           poradi: 1,
-          typ: true,
-          zneniOdpovedi: undefined
-        }
+          typ: 'OTEVRENA',
+          zneniOdpovedi: undefined,
+        },
       ],
       napoveda: undefined,
-      popisOtazky: "Jaká je tvoje oblíbená příchuť zmrzliny?",
+      popisOtazky: 'Jaká je tvoje oblíbená příchuť zmrzliny?',
       poradi: 0,
       povinnostOdpovedi: true,
-      viceOdpovedi: false
+      viceOdpovedi: false,
+    },
+    {
+      id: 4,
+      moznostOdpovedi: [
+        {
+          id: 1,
+          poradi: 1,
+          typ: 'SKALA',
+          jednotka: 10,
+          maxHodnota: 500,
+          minHodnota: 0,
+          zneniOdpovedi: undefined,
+        },
+      ],
+      napoveda: undefined,
+      popisOtazky: 'Jak jsi starý',
+      poradi: 0,
+      povinnostOdpovedi: true,
+      viceOdpovedi: false,
     },
     {
       id: 2,
@@ -34,33 +53,33 @@ export default {
         {
           id: 1,
           poradi: 1,
-          typ: false,
-          zneniOdpovedi: 'Panna'
+          typ: 'OTEVRENA',
+          zneniOdpovedi: 'Panna',
         },
         {
           id: 2,
           poradi: 2,
-          typ: false,
-          zneniOdpovedi: 'Lev'
+          typ: 'OTEVRENA',
+          zneniOdpovedi: 'Lev',
         },
         {
           id: 3,
           poradi: 3,
-          typ: false,
-          zneniOdpovedi: 'Býk'
+          typ: 'OTEVRENA',
+          zneniOdpovedi: 'Býk',
         },
         {
           id: 4,
           poradi: 4,
-          typ: true,
-          zneniOdpovedi: undefined
-        }
+          typ: 'UZAVRENA',
+          zneniOdpovedi: undefined,
+        },
       ],
-      napoveda: "Případně vyber nejbližší svému znamení",
-      popisOtazky: "Co jsi za znamení?",
+      napoveda: 'Případně vyber nejbližší svému znamení',
+      popisOtazky: 'Co jsi za znamení?',
       poradi: 0,
       povinnostOdpovedi: true,
-      viceOdpovedi: false
+      viceOdpovedi: false,
     },
     {
       id: 3,
@@ -68,27 +87,27 @@ export default {
         {
           id: 1,
           poradi: 1,
-          typ: false,
-          zneniOdpovedi: 'Jahodová'
+          typ: 'UZAVRENA',
+          zneniOdpovedi: 'Jahodová',
         },
         {
           id: 2,
           poradi: 2,
-          typ: false,
-          zneniOdpovedi: 'Vanilková'
+          typ: 'UZAVRENA',
+          zneniOdpovedi: 'Vanilková',
         },
         {
           id: 3,
           poradi: 3,
-          typ: false,
-          zneniOdpovedi: 'Pistáciová'
-        }
+          typ: 'UZAVRENA',
+          zneniOdpovedi: 'Pistáciová',
+        },
       ],
-      napoveda: "Případně vyber nejbližší svému znamení",
-      popisOtazky: "Jaká je tvoje oblíbená příchuť zmrzliny?",
+      napoveda: 'Případně vyber nejbližší svému znamení',
+      popisOtazky: 'Jaká je tvoje oblíbená příchuť zmrzliny?',
       poradi: 0,
       povinnostOdpovedi: false,
-      viceOdpovedi: true
-    }
+      viceOdpovedi: true,
+    },
   ],
 } as Dotaznik;

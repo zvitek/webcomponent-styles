@@ -1,10 +1,13 @@
 import { Component, h, Element, State, Prop, Host } from '@stencil/core';
 import { loadDesignSystemLibrary } from '../../utils/loader';
 import { formInputGenerator } from '../form/FormParts';
-import questions from '../../mock/questions';
 import { Answer, AnswerControl, AnswerError } from '../../schema/Answer';
 import { validateClientAnswers } from '../../helpers/answer';
 import { Dotaznik } from '../../schema/generated/types';
+import { loadQuestionnaire } from '../../api';
+import { errorTemplate } from '../templates/Error';
+import { successTemplate } from '../templates/Success';
+import { questionnaireTemplates } from '../templates/Questionaire';
 
 @Component({
   tag: 'mpsv-feedback',
@@ -29,13 +32,17 @@ export class Feedback {
 
 
   async componentWillLoad() {
-    await loadDesignSystemLibrary(this.host);
-    this.govDesignSystemLoaded = true;
-    this.questionnaire = questions;
+    try {
+      await loadDesignSystemLibrary(this.host);
+      this.govDesignSystemLoaded = true;
+      this.questionnaire = await loadQuestionnaire();
+    } catch (e) {
+      console.log('MAKE ERROR');
+    }
   }
 
   private validateQuestions() {
-    const errors = validateClientAnswers(questions.otazkaDotazniku, this.answers);
+    const errors = validateClientAnswers(this.questionnaire.otazkaDotazniku, this.answers);
     this.errors = [...errors];
     return errors.length ? false : true;
   }
@@ -44,47 +51,6 @@ export class Feedback {
     if (this.govDesignSystemLoaded === false) {
       return;
     }
-
-    const renderError = () => {
-      return (
-        <gov-message variant='error'>
-          <gov-icon name='info' slot='icon'></gov-icon>
-          <p class={'gov-color--error-500'}>
-            Formulář se nepodařilo odeslat, zkuste to, prosím, znovu anebo nás kontaktujte.
-          </p>
-        </gov-message>
-      );
-    };
-
-    const renderSuccess = (closeButton: boolean = false) => {
-      return (
-        <div class={'mpsv-form__success'}>
-          <gov-empty>
-            <gov-icon slot='icon' name='doc-review' type='complex'></gov-icon>
-            <p class='gov-text--4xl gov-color--success-500 gov-mb--unset'>Odesláno</p>
-            <p class='gov-text--l gov-color--secondary-700'>
-              Děkujeme za odeslaní zpětná vazby.
-            </p>
-            <gov-spacer size={'l'}></gov-spacer>
-            {closeButton ? (
-              <gov-button variant={'primary'} type={'outlined'}>Zavřít</gov-button>
-            ) : null}
-          </gov-empty>
-        </div>
-      );
-    };
-
-    const renderDescription = () => {
-      if (String(this.questionnaire.popis).length === 0 || !this.questionnaire.popis) {
-        return null;
-      }
-      return (
-        <div>
-          <p>{this.questionnaire.popis}</p>
-          <gov-spacer size={'xl'}></gov-spacer>
-        </div>
-      );
-    };
 
     const formRender = () => {
       return (
@@ -105,7 +71,7 @@ export class Feedback {
             size={'l'}>
             Odeslat
           </gov-button>
-          {this.error ? renderError() : null}
+          {this.error ? errorTemplate() : null}
         </form>
       );
     };
@@ -116,10 +82,10 @@ export class Feedback {
           <gov-modal label={this.questionnaire.nazev} id='modal'
                      wcag-close-label={'Zavřít dialog - ' + this.questionnaire.nazev} open>
             {this.success ? (
-              renderSuccess(true)
+              successTemplate(true)
             ) : (
               <div>
-                {renderDescription()}
+                {questionnaireTemplates(this.questionnaire).description()}
                 {formRender()}
               </div>
             )}
@@ -130,11 +96,11 @@ export class Feedback {
     return (
       <Host>
         {this.success ? (
-          renderSuccess(true)
+          successTemplate(true)
         ) : (
           <div>
             <h2>{this.questionnaire.nazev}</h2>
-            {renderDescription()}
+            {questionnaireTemplates(this.questionnaire).description()}
             {formRender()}
           </div>
         )}
@@ -148,6 +114,9 @@ export class Feedback {
     if (this.validateQuestions()) {
       this.processing = true;
       this.success = true;
+
+
+
       console.log('submited');
     }
   };

@@ -10,21 +10,29 @@
  */
 
 export interface Dotaznik {
-  /** @format date-time */
+  /** @format date */
+  datumDo?: string;
+  /** @format date */
   datumVystaveni: string;
-  /** @format date-time */
+  /** @format date */
   datumVytvoreni: string;
   /** @format int64 */
   id: number;
   jmenoAutora: string;
   kod: string;
+  /** @format int64 */
+  nadchazejiciVerzeDotaznikuId?: number;
   napoveda: string;
   nazev: string;
   otazkaDotazniku?: OtazkaDotazniku[];
   popis: string;
-  /** @format int64 */
-  predchazejiciVerzeDotaznikId?: number;
   prijmeniAutora: string;
+}
+
+export interface DotaznikAclDto {
+  /** @format int64 */
+  dotaznikId: number;
+  canEdit: boolean;
 }
 
 export interface DotaznikDto {
@@ -35,7 +43,7 @@ export interface DotaznikDto {
   /** @format date */
   datumVytvoreni: string;
   /** @format int64 */
-  predchazejiciVerzeDotaznikId?: number;
+  nadchazejiciVerzeDotaznikuId?: number;
   kod: string;
   jmenoAutora: string;
   prijmeniAutora: string;
@@ -68,10 +76,16 @@ export interface MatchDto {
 export interface MoznostOdpovedi {
   /** @format int64 */
   id: number;
+  /** @format int64 */
+  jednotka?: number;
+  /** @format int64 */
+  maxHodnota?: number;
+  /** @format int64 */
+  minHodnota?: number;
   otazkaDotazniku?: OtazkaDotazniku;
   /** @format int64 */
   poradi: number;
-  typ: boolean;
+  typ: 'UZAVRENA' | 'OTEVRENA' | 'SKALA';
   zneniOdpovedi?: string;
 }
 
@@ -165,15 +179,16 @@ export interface SimpleStringDto {
 
 export interface ZaznamDotazniku {
   /** @format date-time */
-  datumVolani: string;
+  casVolani: string;
   /** @format date-time */
-  datumVyplneni: string;
+  casVyplneni: string;
   /** @format int64 */
   dotaznikId: number;
   /** @format int64 */
   id: number;
   ipAdresa: string;
   odpovedDotazniku?: OdpovedDotazniku[];
+  priznakFormulare: string;
   token: string;
 }
 
@@ -181,10 +196,10 @@ export interface ZaznamDotaznikuDto {
   /** @format int64 */
   id: number;
   dotaznik: DotaznikDto;
-  /** @format date */
-  datumVolani: string;
   /** @format date-time */
-  datumVyplneni: string;
+  casVolani: string;
+  /** @format date-time */
+  casVyplneni: string;
   ipAdresa: string;
   token: string;
   odpovedDotazniku: OdpovedDotaznikuDto[];
