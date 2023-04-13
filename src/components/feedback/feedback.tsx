@@ -2,9 +2,9 @@ import { Component, h, Element, State, Prop, Host } from '@stencil/core';
 import { loadDesignSystemLibrary } from '../../utils/loader';
 import { formInputGenerator } from '../form/FormParts';
 import { Answer, AnswerControl, AnswerError } from '../../schema/Answer';
-import { validateClientAnswers } from '../../helpers/answer';
+import { prepareAnswersForSubmit, validateClientAnswers } from '../../helpers/answer';
 import { Dotaznik } from '../../schema/generated/types';
-import { loadQuestionnaire } from '../../api';
+import { loadQuestionnaire, submitQuestionnaire } from '../../api';
 import { errorTemplate } from '../templates/Error';
 import { successTemplate } from '../templates/Success';
 import { questionnaireTemplates } from '../templates/Questionaire';
@@ -19,6 +19,7 @@ export class Feedback {
   @Element() host: HTMLMpsvFeedbackElement;
 
   @Prop() presentation: 'standalone' | 'modal' = 'standalone';
+  @Prop() token: string;
 
   @State() govDesignSystemLoaded: boolean = false;
   @State() success: boolean = false;
@@ -62,6 +63,7 @@ export class Feedback {
             onAnswerUpdate: this.onAnswerUpdateHandler.bind(this),
             onControlUpdate: this.onAnswerControlHandler.bind(this),
           }))}
+          {this.error ? errorTemplate() : null}
           <gov-button
             wcag-label={'Odeslat dotatník - ' + this.questionnaire.nazev}
             variant={'primary'}
@@ -71,7 +73,6 @@ export class Feedback {
             size={'l'}>
             Odeslat
           </gov-button>
-          {this.error ? errorTemplate() : null}
         </form>
       );
     };
@@ -108,16 +109,23 @@ export class Feedback {
     );
   }
 
-  private onSubmitHandler(e: SubmitEvent) {
+  private async onSubmitHandler(e: SubmitEvent) {
     e.preventDefault();
     this.isDirty = true;
     if (this.validateQuestions()) {
-      this.processing = true;
-      this.success = true;
-
-
-
-      console.log('submited');
+      try {
+        this.error = false;
+        this.processing = true;
+        const data = prepareAnswersForSubmit(this.questionnaire, this.answers);
+        data.token = this.token;
+        data.ipAdresa = '194.47.40.222';
+        await submitQuestionnaire(data);
+        this.success = true;
+      } catch (e) {
+        this.error = true;
+      } finally {
+        this.processing = false;
+      }
     }
   };
 

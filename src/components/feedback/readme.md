@@ -10,6 +10,7 @@
 | Property       | Attribute      | Description | Type                      | Default        |
 | -------------- | -------------- | ----------- | ------------------------- | -------------- |
 | `presentation` | `presentation` |             | `"modal" \| "standalone"` | `'standalone'` |
+| `token`        | `token`        |             | `string`                  | `undefined`    |
 
 
 ----------------------------------------------

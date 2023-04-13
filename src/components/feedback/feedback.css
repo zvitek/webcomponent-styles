@@ -7,6 +7,7 @@
   margin: 0;
   padding: 0;
 }
+
 :host * {
   box-sizing: border-box;
 }
@@ -16,39 +17,48 @@
   padding-bottom: 1.5em;
   border-bottom: 1px solid var(--gov-color-secondary-400);
 }
+
 .mpsv-form-control:last-of-type {
   border-bottom: 0 none;
 }
+
 gov-form-radio:not(gov-form-radio:last-of-type), gov-form-checkbox:not(gov-form-checkbox:last-of-type) {
   margin-bottom: 0.5em;
 }
+
 .mpsv-form-control__custom-answer {
   margin-top: 1em;
   display: flex;
   flex-direction: column;
   gap: 0.5em;
 }
+
 .mpsv-form__success .gov-empty__icon {
   background: linear-gradient(to bottom, var(--gov-color-success-200), var(--gov-color-success-100));
   color: var(--gov-color-success-500);
   width: 5em;
   height: 5em;
 }
+
 .mpsv-form__success .gov-empty__icon > * {
   width: 3em;
   height: 3em;
 }
+
 .mpsv-form__success {
   --gov-text-4xl-margin-bottom: 0em
 }
+
 gov-message {
   margin-top: 1em;
 }
+
 .mpsv-form__success .gov-empty {
   display: flex;
   flex-direction: row;
   gap: 2em;
 }
+
 @media screen and (max-width: 30em) {
   .mpsv-form__success .gov-empty {
     flex-direction: column;
@@ -56,18 +66,38 @@ gov-message {
   }
 }
 
+/**
+  RANGE CONTAINER
+ */
+.mpsv-form-group__range {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  gap: 1em;
+  align-items: center;
+}
+.mpsv-form-range__value {
+  margin-bottom: 0;
+}
+
+/**
+  CUSTOM RANGE INPUT
+ */
+
 input[type=range] {
   -webkit-appearance: none;
   margin: 18px 0;
   width: 100%;
   border: 2px solid transparent;
 }
+
 input[type=range]:focus-visible {
   outline: none;
   outline-offset: 1em;
   border-radius: 3px;
   border: 2px solid var(--gov-color-focus-base);
 }
+
 input[type=range]::-webkit-slider-runnable-track {
   width: 100%;
   height: 0.5em;
@@ -76,6 +106,7 @@ input[type=range]::-webkit-slider-runnable-track {
   background: var(--gov-color-secondary-400);
   border-radius: 3px;
 }
+
 input[type=range]::-webkit-slider-thumb {
   box-shadow: none;
   height: 16px;
@@ -86,6 +117,7 @@ input[type=range]::-webkit-slider-thumb {
   -webkit-appearance: none;
   margin-top: -5px;
 }
+
 input[type=range]::-moz-range-track {
   width: 100%;
   height: 0.5em;
@@ -94,6 +126,7 @@ input[type=range]::-moz-range-track {
   background: var(--gov-color-primary);
   border-radius: 3px;
 }
+
 input[type=range]::-moz-range-thumb {
   box-shadow: none;
   height: 1em;
@@ -102,6 +135,7 @@ input[type=range]::-moz-range-thumb {
   background: var(--gov-color-primary);
   cursor: pointer;
 }
+
 input[type=range]::-ms-track {
   width: 100%;
   height: 0.5em;
@@ -111,14 +145,17 @@ input[type=range]::-ms-track {
   border-width: 16px 0;
   color: transparent;
 }
+
 input[type=range]::-ms-fill-lower {
   background: var(--gov-color-primary);
   border-radius: 3px;
 }
+
 input[type=range]::-ms-fill-upper {
   background: var(--gov-color-primary);
   border-radius: 3px;
 }
+
 input[type=range]::-ms-thumb {
   height: 1em;
   width: 1em;

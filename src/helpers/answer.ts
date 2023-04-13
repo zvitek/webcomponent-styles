@@ -1,4 +1,4 @@
-import { OtazkaDotazniku } from '../schema/generated/types';
+import { Dotaznik, OdpovedDotazniku, OtazkaDotazniku, ZaznamDotazniku } from '../schema/generated/types';
 import { Answer, AnswerError } from '../schema/Answer';
 import { isAdditionalAnswerAvailable } from './question';
 
@@ -31,6 +31,36 @@ export function validateClientAnswers(questions: OtazkaDotazniku[], answers: Ans
         message: 'Zadejte, prosím, odpověď',
       };
     }
-    return null
+    return null;
   }).filter((errors) => errors !== null);
+}
+
+export function prepareAnswersForSubmit(questionnaire: Dotaznik, answers: Answer[]): ZaznamDotazniku {
+  const date = new Date()
+  const clearAnswers: OdpovedDotazniku[] = [];
+  answers.map((answer) => {
+    if (Array.isArray(answer.value)) {
+      answer.value.map((value) => {
+        clearAnswers.push({
+          otazkaId: answer.questionId,
+          textOdpovedi: String(value),
+        });
+      });
+    } else {
+      clearAnswers.push({
+        doplnujiciOdpoved: answer.additionalValue,
+        otazkaId: answer.questionId,
+        textOdpovedi: String(answer.value),
+      });
+    }
+  });
+  let body: ZaznamDotazniku = {
+    casVolani: date.toISOString(),
+    casVyplneni: date.toISOString(),
+    dotaznikId: questionnaire.id,
+    token: '',
+    odpovedDotazniku: clearAnswers,
+  };
+
+  return body;
 }

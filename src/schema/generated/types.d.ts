@@ -97,7 +97,7 @@ export interface NestedDto {
 export interface OdpovedDotazniku {
   doplnujiciOdpoved?: string;
   /** @format int64 */
-  id: number;
+  id?: number;
   /** @format int64 */
   otazkaId: number;
   textOdpovedi?: string;
@@ -179,16 +179,16 @@ export interface SimpleStringDto {
 
 export interface ZaznamDotazniku {
   /** @format date-time */
-  casVolani: string;
+  casVolani?: string;
   /** @format date-time */
-  casVyplneni: string;
+  casVyplneni?: string;
   /** @format int64 */
   dotaznikId: number;
   /** @format int64 */
-  id: number;
-  ipAdresa: string;
+  id?: number;
+  ipAdresa?: string;
   odpovedDotazniku?: OdpovedDotazniku[];
-  priznakFormulare: string;
+  priznakFormulare?: string;
   token: string;
 }
 

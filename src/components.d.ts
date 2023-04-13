@@ -8,6 +8,7 @@ import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 export namespace Components {
     interface MpsvFeedback {
         "presentation": 'standalone' | 'modal';
+        "token": string;
     }
 }
 declare global {
@@ -24,6 +25,7 @@ declare global {
 declare namespace LocalJSX {
     interface MpsvFeedback {
         "presentation"?: 'standalone' | 'modal';
+        "token"?: string;
     }
     interface IntrinsicElements {
         "mpsv-feedback": MpsvFeedback;

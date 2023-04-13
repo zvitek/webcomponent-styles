@@ -117,8 +117,9 @@ const formClassicInput = (question: OtazkaDotazniku, props: FormPartProps) => {
 };
 
 const formRangeInput = (question: OtazkaDotazniku, props: FormPartProps) => {
+  const answer = isQuestionAnswered(question, props.answers);
   const option = question.moznostOdpovedi.find((answer) => answer.typ === 'SKALA');
-  const onChange = (e: CustomEvent) => {
+  const onChange = (e: InputEvent) => {
     const target = e.target as HTMLInputElement;
     props.onAnswerUpdate({
       questionId: question.id,
@@ -127,8 +128,11 @@ const formRangeInput = (question: OtazkaDotazniku, props: FormPartProps) => {
     });
   };
   return (
-    <input type='range' min={option.minHodnota} max={option.maxHodnota} step={option.jednotka}
-           name={question.id.toString()} onChange={onChange} required={question.povinnostOdpovedi} />
+    <div class={'mpsv-form-group__range'}>
+      <input type='range' min={option.minHodnota} max={option.maxHodnota} step={option.jednotka}
+             name={question.id.toString()} onInput={onChange} required={question.povinnostOdpovedi} />
+      <span class={'mpsv-form-range__value gov-text--m'}>{answer ? answer.value : option.minHodnota}</span>
+    </div>
   );
 };
 
