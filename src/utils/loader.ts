@@ -2,7 +2,6 @@ import { HTMLStencilElement } from '@stencil/core/internal';
 
 export async function loadDesignSystemLibrary(target: HTMLStencilElement) {
   await Promise.all([
-    //loadExternalScripts('https://newpvsstorage.z16.web.core.windows.net/cdn/0.0.12/build/core.js?v=2', false, target),
     loadExternalScripts('https://newpvsstorage.z16.web.core.windows.net/cdn/0.0.12/build/core.esm.js?v=2', true, target),
   ])
   //await loadExternalStyle('https://newpvsstorage.z16.web.core.windows.net/test/feedback/feedback.css?v=2', target)
