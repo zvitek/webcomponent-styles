@@ -3,7 +3,6 @@
   "version": "0.0.1",
   "description": "Stencil Component Starter",
   "main": "dist/index.cjs.js",
-  "module": "dist/index.js",
   "es2015": "dist/esm/index.mjs",
   "es2017": "dist/esm/index.mjs",
   "types": "dist/types/index.d.ts",
@@ -19,7 +18,8 @@
     "loader/"
   ],
   "scripts": {
-    "build": "stencil build --docs",
+    "build1": "stencil build --docs",
+    "build": "API_URL='https://mpsv-ivp-lb.assecosk.local/dotazniky/rest' stencil build --docs",
     "start": "stencil build --dev --watch --serve",
     "test": "stencil test --spec --e2e",
     "test.watch": "stencil test --spec --e2e --watchAll",

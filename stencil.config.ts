@@ -13,16 +13,21 @@ export const config: Config = {
     },
     {
       type: 'docs-readme',
+      strict: true
     },
     {
       type: 'www',
-      serviceWorker: null, // disable service workers
+      serviceWorker: null,
+    },
+    {
+      type: 'dist-custom-elements',
+      includeGlobalScripts: false,
     },
   ],
   plugins: [
     replace({
-      API_URL: process.env.API_URL || "https://mpsv-ivp-lb.assecosk.local/dotazniky/rest",
+      API_URL: process.env.API_URL || 'https://mpsv-ivp-lb.assecosk.local/dotazniky/rest',
       delimiters: ['{', '}'],
-    })
-  ]
+    }),
+  ],
 };
