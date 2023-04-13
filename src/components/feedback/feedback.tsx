@@ -100,6 +100,7 @@ export class Feedback {
     };
 
     const contentRender = () => {
+      const isModal = this.presentation === 'modal'
       if (this.mainError) {
         return mainErrorTemplate();
       }
@@ -107,10 +108,11 @@ export class Feedback {
         return infoErrorTemplate();
       }
       if (this.success) {
-        return successTemplate(this.presentation === 'modal' ? () => this.modalCloseHandler() : null);
+        return successTemplate(isModal ? () => this.modalCloseHandler() : null);
       }
       return (
         <div>
+          {!isModal ? (<h1>{this.questionnaire.nazev}</h1>) : null}
           {questionnaireTemplates(this.questionnaire).description()}
           {formRender()}
         </div>
