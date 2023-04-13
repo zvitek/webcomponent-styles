@@ -1,8 +1,8 @@
 import { Dotaznik, ZaznamDotazniku } from '../schema/generated/types';
 
-export async function loadQuestionnaire(): Promise<Dotaznik> {
+export async function loadQuestionnaire(code: string): Promise<Dotaznik> {
   try {
-    const response = await fetch(`{API_URL}/dotaznik/14`);
+    const response = await fetch(`{API_URL}/dotaznik/` + code);
     if (!response.ok) {
       throw new Error();
     }

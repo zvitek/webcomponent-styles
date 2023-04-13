@@ -40,12 +40,24 @@ gov-form-radio:not(gov-form-radio:last-of-type), gov-form-checkbox:not(gov-form-
   height: 5em;
 }
 
-.mpsv-form__success .gov-empty__icon > * {
+.mpsv-form__error .gov-empty__icon {
+  background: linear-gradient(to bottom, var(--gov-color-error-200), var(--gov-color-error-100));
+  color: var(--gov-color-error-500);
+  width: 5em;
+  height: 5em;
+}
+
+.mpsv-form__info .gov-empty__icon {
+  width: 5em;
+  height: 5em;
+}
+
+.mpsv-form__success .gov-empty__icon > *, .mpsv-form__error .gov-empty__icon > *, .mpsv-form__info .gov-empty__icon > * {
   width: 3em;
   height: 3em;
 }
 
-.mpsv-form__success {
+.mpsv-form__success, .mpsv-form__error, .mpsv-form__infor {
   --gov-text-4xl-margin-bottom: 0em
 }
 
@@ -53,14 +65,14 @@ gov-message {
   margin-top: 1em;
 }
 
-.mpsv-form__success .gov-empty {
+.mpsv-form__success .gov-empty, .mpsv-form__error .gov-empty, .mpsv-form__info .gov-empty {
   display: flex;
   flex-direction: row;
   gap: 2em;
 }
 
 @media screen and (max-width: 30em) {
-  .mpsv-form__success .gov-empty {
+  .mpsv-form__success .gov-empty, .mpsv-form__error .gov-empty, .mpsv-form__info .gov-empty {
     flex-direction: column;
     gap: 0;
   }
@@ -76,6 +88,7 @@ gov-message {
   gap: 1em;
   align-items: center;
 }
+
 .mpsv-form-range__value {
   margin-bottom: 0;
 }

@@ -5,9 +5,10 @@ import { Answer, AnswerControl, AnswerError } from '../../schema/Answer';
 import { prepareAnswersForSubmit, validateClientAnswers } from '../../helpers/answer';
 import { Dotaznik } from '../../schema/generated/types';
 import { loadQuestionnaire, submitQuestionnaire } from '../../api';
-import { errorTemplate } from '../templates/Error';
+import { errorTemplate, infoErrorTemplate, mainErrorTemplate } from '../templates/Error';
 import { successTemplate } from '../templates/Success';
 import { questionnaireTemplates } from '../templates/Questionaire';
+import { isQuestionnaireClosed } from '../../helpers/questionnaire';
 
 @Component({
   tag: 'mpsv-feedback',
@@ -18,12 +19,24 @@ export class Feedback {
 
   @Element() host: HTMLMpsvFeedbackElement;
 
+  /**
+   * Variant of questionnaire presentation
+   */
   @Prop() presentation: 'standalone' | 'modal' = 'standalone';
+  /**
+   * Unique user code
+   */
   @Prop() token: string;
+  /**
+   * Unique questionnaire code
+   */
+  @Prop() code: string;
 
   @State() govDesignSystemLoaded: boolean = false;
   @State() success: boolean = false;
   @State() error: boolean = false;
+  @State() mainError: boolean = false;
+  @State() closedError: boolean = false;
   @State() processing: boolean = false;
   @State() isDirty: boolean = false;
   @State() answers: Answer[] = [];
@@ -31,14 +44,16 @@ export class Feedback {
   @State() errors: AnswerError[] = [];
   @State() questionnaire: Dotaznik;
 
-
   async componentWillLoad() {
     try {
+      this.questionnaire = await loadQuestionnaire(this.code);
       await loadDesignSystemLibrary(this.host);
       this.govDesignSystemLoaded = true;
-      this.questionnaire = await loadQuestionnaire();
+      if (this.questionnaire) {
+        this.closedError = isQuestionnaireClosed(this.questionnaire);
+      }
     } catch (e) {
-      console.log('MAKE ERROR');
+      this.mainError = true;
     }
   }
 
@@ -52,6 +67,31 @@ export class Feedback {
     if (this.govDesignSystemLoaded === false) {
       return;
     }
+
+    const questionareName = () => {
+      if (this.questionnaire) {
+        return this.questionnaire.nazev;
+      }
+      return 'Dotaník';
+    };
+
+    const contentRender = () => {
+      if (this.mainError) {
+        return mainErrorTemplate();
+      }
+      if (this.closedError) {
+        return infoErrorTemplate();
+      }
+      if (this.success) {
+        return successTemplate(true);
+      }
+      return (
+        <div>
+          {questionnaireTemplates(this.questionnaire).description()}
+          {formRender()}
+        </div>
+      );
+    };
 
     const formRender = () => {
       return (
@@ -80,31 +120,18 @@ export class Feedback {
     if (this.presentation === 'modal') {
       return (
         <Host>
-          <gov-modal label={this.questionnaire.nazev} id='modal'
-                     wcag-close-label={'Zavřít dialog - ' + this.questionnaire.nazev} open>
-            {this.success ? (
-              successTemplate(true)
-            ) : (
-              <div>
-                {questionnaireTemplates(this.questionnaire).description()}
-                {formRender()}
-              </div>
-            )}
+          <gov-modal
+            label={questionareName()}
+            id='modal'
+            wcag-close-label={'Zavřít dialog - ' + questionareName()} open>
+            {contentRender()}
           </gov-modal>
         </Host>
       );
     }
     return (
       <Host>
-        {this.success ? (
-          successTemplate(true)
-        ) : (
-          <div>
-            <h2>{this.questionnaire.nazev}</h2>
-            {questionnaireTemplates(this.questionnaire).description()}
-            {formRender()}
-          </div>
-        )}
+        {contentRender()}
       </Host>
     );
   }

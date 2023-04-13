@@ -7,7 +7,17 @@
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 export namespace Components {
     interface MpsvFeedback {
+        /**
+          * Unique questionnaire code
+         */
+        "code": string;
+        /**
+          * Variant of questionnaire presentation
+         */
         "presentation": 'standalone' | 'modal';
+        /**
+          * Unique user code
+         */
         "token": string;
     }
 }
@@ -24,7 +34,17 @@ declare global {
 }
 declare namespace LocalJSX {
     interface MpsvFeedback {
+        /**
+          * Unique questionnaire code
+         */
+        "code"?: string;
+        /**
+          * Variant of questionnaire presentation
+         */
         "presentation"?: 'standalone' | 'modal';
+        /**
+          * Unique user code
+         */
         "token"?: string;
     }
     interface IntrinsicElements {
