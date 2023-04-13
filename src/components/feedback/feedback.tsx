@@ -1,4 +1,4 @@
-import { Component, h, Element, State, Prop, Host, EventEmitter, Event, Method } from '@stencil/core';
+import { Component, h, Element, State, Prop, Host, EventEmitter, Event, Method, Watch } from '@stencil/core';
 import { loadDesignSystemLibrary } from '../../utils/loader';
 import { formInputGenerator } from '../form/FormParts';
 import { Answer, AnswerControl, AnswerError } from '../../schema/Answer';
@@ -34,6 +34,10 @@ export class Feedback {
    */
   @Prop() code: string;
   /**
+   * View the questionnaire
+   */
+  @Prop() display: boolean = false;
+  /**
    * Called after successful loading of the questionnaire
    */
   @Event({ eventName: 'mpsv-loaded' }) mpsvLoaded: EventEmitter<Dotaznik>;
@@ -56,6 +60,7 @@ export class Feedback {
 
   @State() govDesignSystemLoaded: boolean = false;
   @State() success: boolean = false;
+  @State() viewQuestionnaire: boolean = false;
   @State() error: boolean = false;
   @State() mainError: boolean = false;
   @State() closedError: boolean = false;
@@ -66,7 +71,13 @@ export class Feedback {
   @State() errors: AnswerError[] = [];
   @State() questionnaire: Dotaznik;
 
+  @Watch('display')
+  validateVariant(newValue: boolean): void {
+    this.viewQuestionnaire = newValue;
+  }
+
   async componentWillLoad() {
+    this.viewQuestionnaire = this.display;
     try {
       this.questionnaire = await loadQuestionnaire(this.code);
       await loadDesignSystemLibrary(this.host);
@@ -88,7 +99,7 @@ export class Feedback {
   }
 
   render() {
-    if (this.govDesignSystemLoaded === false) {
+    if (this.govDesignSystemLoaded === false || this.viewQuestionnaire === false) {
       return;
     }
 
@@ -100,7 +111,7 @@ export class Feedback {
     };
 
     const contentRender = () => {
-      const isModal = this.presentation === 'modal'
+      const isModal = this.presentation === 'modal';
       if (this.mainError) {
         return mainErrorTemplate();
       }

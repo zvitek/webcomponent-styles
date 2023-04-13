@@ -12,12 +12,15 @@
   <script nomodule src='/build/mpsv-feedback.js'></script>
 </head>
 <body style='padding: 80px'>
-<mpsv-feedback id='baggr' code='14' token='sadf4wsd-2342'></mpsv-feedback>
+<mpsv-feedback id='baggr' presentation='modal' code='14' token='sadf4wsd-2342'></mpsv-feedback>
 
 <script>
-  document.getElementById('baggr').addEventListener('mpsv-close', function(e) {
-    console.log(e);
-  })
+  setTimeout(function() {
+    const item = document.getElementById('baggr')
+    setTimeout(function() {
+      item.setAttribute('display', 'true')
+    }, 2000)
+  }, 0)
 </script>
 </body>
 </html>

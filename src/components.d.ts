@@ -18,6 +18,10 @@ export namespace Components {
          */
         "code": string;
         /**
+          * View the questionnaire
+         */
+        "display": boolean;
+        /**
           * Variant of questionnaire presentation
          */
         "presentation": 'standalone' | 'modal';
@@ -48,6 +52,10 @@ declare namespace LocalJSX {
           * Unique questionnaire code
          */
         "code"?: string;
+        /**
+          * View the questionnaire
+         */
+        "display"?: boolean;
         /**
           * Called when the questionnaire is closed. Only in the case of a dialogue
          */

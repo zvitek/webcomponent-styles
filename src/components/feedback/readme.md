@@ -37,6 +37,16 @@ Type: `Promise<void>`
 
 
 
+### `run() => Promise<void>`
+
+View the questionnaire
+
+#### Returns
+
+Type: `Promise<void>`
+
+
+
 
 ----------------------------------------------
 
