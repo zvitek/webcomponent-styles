@@ -27,7 +27,8 @@
     "api-schema": "npx swagger-typescript-api -p ./openapi.json -o ./src/schema/generated --name types.d.ts --no-client"
   },
   "dependencies": {
-    "@stencil/core": "^3.0.0"
+    "@stencil/core": "^3.0.0",
+    "rollup-plugin-replace": "^2.2.0"
   },
   "devDependencies": {
     "@types/jest": "^27.5.2",
