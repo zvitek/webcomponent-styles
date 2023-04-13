@@ -5,8 +5,14 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
+import { Dotaznik } from "./schema/generated/types";
+export { Dotaznik } from "./schema/generated/types";
 export namespace Components {
     interface MpsvFeedback {
+        /**
+          * Closes the open questionnaire. (Only in case of modal)
+         */
+        "closeModal": () => Promise<void>;
         /**
           * Unique questionnaire code
          */
@@ -20,6 +26,10 @@ export namespace Components {
          */
         "token": string;
     }
+}
+export interface MpsvFeedbackCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLMpsvFeedbackElement;
 }
 declare global {
     interface HTMLMpsvFeedbackElement extends Components.MpsvFeedback, HTMLStencilElement {
@@ -38,6 +48,26 @@ declare namespace LocalJSX {
           * Unique questionnaire code
          */
         "code"?: string;
+        /**
+          * Called when the questionnaire is closed. Only in the case of a dialogue
+         */
+        "onMpsv-close"?: (event: MpsvFeedbackCustomEvent<any>) => void;
+        /**
+          * Called when questionnaire loading error
+         */
+        "onMpsv-load-error"?: (event: MpsvFeedbackCustomEvent<Error>) => void;
+        /**
+          * Called after successful loading of the questionnaire
+         */
+        "onMpsv-loaded"?: (event: MpsvFeedbackCustomEvent<Dotaznik>) => void;
+        /**
+          * Called after successful questionnaire submission
+         */
+        "onMpsv-sent"?: (event: MpsvFeedbackCustomEvent<Dotaznik>) => void;
+        /**
+          * Called in case of a questionnaire submission error
+         */
+        "onMpsv-sent-error"?: (event: MpsvFeedbackCustomEvent<Dotaznik>) => void;
         /**
           * Variant of questionnaire presentation
          */

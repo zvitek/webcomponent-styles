@@ -1,6 +1,6 @@
 import { h } from '@stencil/core';
 
-export const successTemplate = (closeButton: boolean = false) => {
+export const successTemplate = (closeButton: () => void = null) => {
   return (
     <div class={'mpsv-form__success'}>
       <gov-empty>
@@ -11,7 +11,7 @@ export const successTemplate = (closeButton: boolean = false) => {
         </p>
         <gov-spacer size={'l'}></gov-spacer>
         {closeButton ? (
-          <gov-button variant={'primary'} type={'outlined'} wcag-label={'Zavřít okno dotazníku'}>Zavřít</gov-button>
+          <gov-button variant={'primary'} type={'outlined'} on-gov-click={closeButton} wcag-label={'Zavřít okno dotazníku'}>Zavřít</gov-button>
         ) : null}
       </gov-empty>
     </div>

@@ -1,4 +1,4 @@
-import { Component, h, Element, State, Prop, Host } from '@stencil/core';
+import { Component, h, Element, State, Prop, Host, EventEmitter, Event, Method } from '@stencil/core';
 import { loadDesignSystemLibrary } from '../../utils/loader';
 import { formInputGenerator } from '../form/FormParts';
 import { Answer, AnswerControl, AnswerError } from '../../schema/Answer';
@@ -9,6 +9,7 @@ import { errorTemplate, infoErrorTemplate, mainErrorTemplate } from '../template
 import { successTemplate } from '../templates/Success';
 import { questionnaireTemplates } from '../templates/Questionaire';
 import { isQuestionnaireClosed } from '../../helpers/questionnaire';
+import { GovModalElement } from '../../schema/Gov';
 
 @Component({
   tag: 'mpsv-feedback',
@@ -16,6 +17,7 @@ import { isQuestionnaireClosed } from '../../helpers/questionnaire';
   shadow: true,
 })
 export class Feedback {
+  private modalRef?: GovModalElement;
 
   @Element() host: HTMLMpsvFeedbackElement;
 
@@ -31,6 +33,26 @@ export class Feedback {
    * Unique questionnaire code
    */
   @Prop() code: string;
+  /**
+   * Called after successful loading of the questionnaire
+   */
+  @Event({ eventName: 'mpsv-loaded' }) mpsvLoaded: EventEmitter<Dotaznik>;
+  /**
+   * Called after successful questionnaire submission
+   */
+  @Event({ eventName: 'mpsv-sent' }) mpsvSent: EventEmitter<Dotaznik>;
+  /**
+   * Called in case of a questionnaire submission error
+   */
+  @Event({ eventName: 'mpsv-sent-error' }) mpsvSentError: EventEmitter<Dotaznik>;
+  /**
+   * Called when questionnaire loading error
+   */
+  @Event({ eventName: 'mpsv-load-error' }) mpsvLoadError: EventEmitter<Error>;
+  /**
+   * Called when the questionnaire is closed. Only in the case of a dialogue
+   */
+  @Event({ eventName: 'mpsv-close' }) mpsvClose: EventEmitter;
 
   @State() govDesignSystemLoaded: boolean = false;
   @State() success: boolean = false;
@@ -52,8 +74,10 @@ export class Feedback {
       if (this.questionnaire) {
         this.closedError = isQuestionnaireClosed(this.questionnaire);
       }
+      this.mpsvLoaded.emit(this.questionnaire);
     } catch (e) {
       this.mainError = true;
+      this.mpsvLoadError.emit(e);
     }
   }
 
@@ -83,7 +107,7 @@ export class Feedback {
         return infoErrorTemplate();
       }
       if (this.success) {
-        return successTemplate(true);
+        return successTemplate(this.presentation === 'modal' ? () => this.modalCloseHandler() : null);
       }
       return (
         <div>
@@ -121,8 +145,10 @@ export class Feedback {
       return (
         <Host>
           <gov-modal
+            ref={el => (this.modalRef = el as GovModalElement)}
             label={questionareName()}
             id='modal'
+            on-gov-close={this.modalCloseHandler.bind(this)}
             wcag-close-label={'Zavřít dialog - ' + questionareName()} open>
             {contentRender()}
           </gov-modal>
@@ -148,8 +174,10 @@ export class Feedback {
         data.ipAdresa = '194.47.40.222';
         await submitQuestionnaire(data);
         this.success = true;
+        this.mpsvSent.emit(this.questionnaire);
       } catch (e) {
         this.error = true;
+        this.mpsvSentError.emit(this.questionnaire);
       } finally {
         this.processing = false;
       }
@@ -178,5 +206,22 @@ export class Feedback {
     }
     controls.push(control);
     this.controls = [...controls];
+  }
+
+  private modalCloseHandler() {
+    if (this.modalRef) {
+      this.modalRef.hide();
+      this.mpsvClose.emit();
+    }
+  }
+
+  /**
+   * Closes the open questionnaire. (Only in case of modal)
+   */
+  @Method()
+  async closeModal(): Promise<void> {
+    if (this.modalRef) {
+      this.modalRef.hide();
+    }
   }
 }
