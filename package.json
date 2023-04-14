@@ -18,8 +18,7 @@
     "loader/"
   ],
   "scripts": {
-    "build1": "stencil build --docs",
-    "build": "API_URL='https://mpsv-ivp-lb.assecosk.local/dotazniky/rest' stencil build --docs",
+    "build": "stencil build --docs",
     "start": "stencil build --dev --watch --serve",
     "test": "stencil test --spec --e2e",
     "test.watch": "stencil test --spec --e2e --watchAll",

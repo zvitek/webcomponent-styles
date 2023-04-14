@@ -10,6 +10,7 @@
 | Property       | Attribute      | Description                           | Type                      | Default        |
 | -------------- | -------------- | ------------------------------------- | ------------------------- | -------------- |
 | `code`         | `code`         | Unique questionnaire code             | `string`                  | `undefined`    |
+| `display`      | `display`      | View the questionnaire                | `boolean`                 | `false`        |
 | `presentation` | `presentation` | Variant of questionnaire presentation | `"modal" \| "standalone"` | `'standalone'` |
 | `token`        | `token`        | Unique user code                      | `string`                  | `undefined`    |
 
@@ -30,16 +31,6 @@
 ### `closeModal() => Promise<void>`
 
 Closes the open questionnaire. (Only in case of modal)
-
-#### Returns
-
-Type: `Promise<void>`
-
-
-
-### `run() => Promise<void>`
-
-View the questionnaire
 
 #### Returns
 
