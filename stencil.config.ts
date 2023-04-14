@@ -13,7 +13,7 @@ export const config: Config = {
     },
     {
       type: 'docs-readme',
-      strict: true
+      strict: true,
     },
     {
       type: 'www',
@@ -26,7 +26,7 @@ export const config: Config = {
   ],
   plugins: [
     replace({
-      API_URL: process.env.API_URL || 'https://mpsv-ivp-lb.assecosk.local/dotazniky/rest',
+      API_URL: process.env.API_URL || '/dotazniky/rest',
       delimiters: ['{', '}'],
     }),
   ],
