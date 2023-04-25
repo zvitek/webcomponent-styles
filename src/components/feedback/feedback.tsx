@@ -5,7 +5,7 @@ import { Answer, AnswerControl, AnswerError } from '../../schema/Answer';
 import { prepareAnswersForSubmit, validateClientAnswers } from '../../helpers/answer';
 import { Dotaznik } from '../../schema/generated/types';
 import { loadQuestionnaire, submitQuestionnaire } from '../../api';
-import { errorTemplate, filledErrorTemplate, infoErrorTemplate, mainErrorTemplate } from '../templates/Error';
+import { errorSubmitTemplate, filledErrorTemplate, infoErrorTemplate, mainErrorTemplate } from '../templates/Error';
 import { successTemplate } from '../templates/Success';
 import { questionnaireTemplates } from '../templates/Questionaire';
 import { isQuestionnaireClosed } from '../../helpers/questionnaire';
@@ -150,7 +150,7 @@ export class Feedback {
             onAnswerUpdate: this.onAnswerUpdateHandler.bind(this),
             onControlUpdate: this.onAnswerControlHandler.bind(this),
           }))}
-          {this.error ? errorTemplate() : null}
+          {this.error ? errorSubmitTemplate() : null}
           <gov-button
             wcag-label={'Odeslat dotatník - ' + this.questionnaire.nazev}
             variant={'primary'}
@@ -171,6 +171,7 @@ export class Feedback {
             ref={el => (this.modalRef = el as GovModalElement)}
             label={questionareName()}
             id='modal'
+            label-tag={'h1'}
             on-gov-close={this.modalCloseHandler.bind(this)}
             wcag-close-label={'Zavřít dialog - ' + questionareName()} open>
             {contentRender()}

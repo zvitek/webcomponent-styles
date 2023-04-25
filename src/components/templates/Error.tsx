@@ -1,6 +1,6 @@
 import { h } from '@stencil/core';
 
-export const errorTemplate = () => {
+export const errorSubmitTemplate = () => {
   return (
     <div>
       <gov-message variant='error'>
