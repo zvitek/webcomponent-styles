@@ -184,7 +184,6 @@ export class Feedback {
         this.processing = true;
         const data = prepareAnswersForSubmit(this.questionnaire, this.answers);
         data.token = this.token;
-        data.ipAdresa = '194.47.40.222';
         await submitQuestionnaire(data);
         this.success = true;
         this.mpsvSent.emit(this.questionnaire);

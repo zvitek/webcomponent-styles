@@ -23,7 +23,7 @@
     "test": "stencil test --spec --e2e",
     "test.watch": "stencil test --spec --e2e --watchAll",
     "generate": "stencil generate",
-    "api-schema": "npx swagger-typescript-api -p ./openapi.json -o ./src/schema/generated --name types.d.ts --no-client"
+    "api-schema": "npx swagger-typescript-api -p ./openapi.json -o ./src/schema/generated --name types.ts --no-client"
   },
   "dependencies": {
     "@stencil/core": "^3.0.0",

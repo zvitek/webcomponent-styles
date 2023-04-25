@@ -179,14 +179,13 @@ export interface SimpleStringDto {
 
 export interface ZaznamDotazniku {
   /** @format date-time */
-  casVolani?: string;
+  casVolani: string;
   /** @format date-time */
-  casVyplneni?: string;
+  casVyplneni: string;
   /** @format int64 */
   dotaznikId: number;
   /** @format int64 */
   id?: number;
-  ipAdresa?: string;
   odpovedDotazniku?: OdpovedDotazniku[];
   priznakFormulare?: string;
   token: string;
@@ -200,7 +199,6 @@ export interface ZaznamDotaznikuDto {
   casVolani: string;
   /** @format date-time */
   casVyplneni: string;
-  ipAdresa: string;
   token: string;
   odpovedDotazniku: OdpovedDotaznikuDto[];
 }

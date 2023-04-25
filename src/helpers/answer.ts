@@ -55,6 +55,7 @@ export function prepareAnswersForSubmit(questionnaire: Dotaznik, answers: Answer
     }
   });
   let body: ZaznamDotazniku = {
+    // @TODO INIT TIME
     casVolani: date.toISOString(),
     casVyplneni: date.toISOString(),
     dotaznikId: questionnaire.id,
