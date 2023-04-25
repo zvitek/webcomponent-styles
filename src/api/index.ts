@@ -1,13 +1,18 @@
-import { Dotaznik, ZaznamDotazniku } from '../schema/generated/types';
+import { Dotaznik, QueryResultListDto, ZaznamDotazniku } from '../schema/generated/types';
 
 export async function loadQuestionnaire(code: string): Promise<Dotaznik> {
   try {
-    const response = await fetch(`{API_URL}/dotaznik/` + code);
+    const response = await fetch(`{API_URL}/dotaznik/list?kod=` + code);
     if (!response.ok) {
       throw new Error();
     }
-    const data: Dotaznik = await response.json();
-    return data;
+    const data: QueryResultListDto = await response.json();
+    const questionnaires = data.list as Dotaznik[];
+    const questionnaire = questionnaires.find((questionnaire) => questionnaire.nadchazejiciVerzeDotaznikuId === null) || null;
+    if (questionnaire) {
+      return questionnaire;
+    }
+    throw new Error();
   } catch (error) {
     throw error;
   }

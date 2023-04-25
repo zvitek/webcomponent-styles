@@ -79,9 +79,9 @@ export class Feedback {
   async componentWillLoad() {
     this.viewQuestionnaire = this.display;
     try {
-      this.questionnaire = await loadQuestionnaire(this.code);
       await loadDesignSystemLibrary(this.host);
       this.govDesignSystemLoaded = true;
+      this.questionnaire = await loadQuestionnaire(this.code);
       if (this.questionnaire) {
         this.closedError = isQuestionnaireClosed(this.questionnaire);
       }
