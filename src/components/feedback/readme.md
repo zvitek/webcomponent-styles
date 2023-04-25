@@ -7,12 +7,12 @@
 
 ## Properties
 
-| Property       | Attribute      | Description                           | Type                      | Default        |
-| -------------- | -------------- | ------------------------------------- | ------------------------- | -------------- |
-| `code`         | `code`         | Unique questionnaire code             | `string`                  | `undefined`    |
-| `display`      | `display`      | View the questionnaire                | `boolean`                 | `false`        |
-| `presentation` | `presentation` | Variant of questionnaire presentation | `"modal" \| "standalone"` | `'standalone'` |
-| `token`        | `token`        | Unique user code                      | `string`                  | `undefined`    |
+| Property       | Attribute      | Description                                                                                                          | Type                      | Default        |
+| -------------- | -------------- | -------------------------------------------------------------------------------------------------------------------- | ------------------------- | -------------- |
+| `code`         | `code`         | Unique questionnaire code                                                                                            | `string`                  | `undefined`    |
+| `display`      | `display`      | View the questionnaire                                                                                               | `boolean`                 | `false`        |
+| `presentation` | `presentation` | Variant of questionnaire presentation                                                                                | `"modal" \| "standalone"` | `'standalone'` |
+| `token`        | `token`        | Unique user token for database authentication. Not mandatory. If the token is empty, the browser token will be used. | `string`                  | `null`         |
 
 
 ## Events
