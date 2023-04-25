@@ -18,6 +18,19 @@ export async function loadQuestionnaire(code: string): Promise<Dotaznik> {
   }
 }
 
+export async function verifyToken(token: string): Promise<boolean> {
+  try {
+    const response = await fetch(`{API_URL}/zaznam-dotazniku/count?token=` + token);
+    if (!response.ok) {
+      throw new Error();
+    }
+    const data: QueryResultListDto = await response.json();
+    return (data.count === 0) ? true : false;
+  } catch (error) {
+    throw error;
+  }
+}
+
 export async function submitQuestionnaire(data: ZaznamDotazniku): Promise<void> {
   try {
     const response = await fetch(`{API_URL}/zaznam-dotazniku`, {
@@ -28,6 +41,11 @@ export async function submitQuestionnaire(data: ZaznamDotazniku): Promise<void> 
       body: JSON.stringify(data),
     });
     if (!response.ok) {
+      throw new Error();
+    }
+    const questionnaireId = await response.text();
+    const pattern = /^-?\d+$/;
+    if (pattern.test(questionnaireId) === false) {
       throw new Error();
     }
   } catch (error) {

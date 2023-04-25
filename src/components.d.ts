@@ -26,7 +26,7 @@ export namespace Components {
          */
         "presentation": 'standalone' | 'modal';
         /**
-          * Unique user code
+          * Unique user token for database authentication. Not mandatory. If the token is empty, the browser token will be used.
          */
         "token": string;
     }
@@ -81,7 +81,7 @@ declare namespace LocalJSX {
          */
         "presentation"?: 'standalone' | 'modal';
         /**
-          * Unique user code
+          * Unique user token for database authentication. Not mandatory. If the token is empty, the browser token will be used.
          */
         "token"?: string;
     }

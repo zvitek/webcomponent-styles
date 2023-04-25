@@ -4,7 +4,7 @@ import { formInputGenerator } from '../form/FormParts';
 import { Answer, AnswerControl, AnswerError } from '../../schema/Answer';
 import { prepareAnswersForSubmit, validateClientAnswers } from '../../helpers/answer';
 import { Dotaznik } from '../../schema/generated/types';
-import { loadQuestionnaire, submitQuestionnaire } from '../../api';
+import { loadQuestionnaire, submitQuestionnaire, verifyToken } from '../../api';
 import { errorSubmitTemplate, filledErrorTemplate, infoErrorTemplate, mainErrorTemplate } from '../templates/Error';
 import { successTemplate } from '../templates/Success';
 import { questionnaireTemplates } from '../templates/Questionaire';
@@ -31,9 +31,9 @@ export class Feedback {
    */
   @Prop() presentation: 'standalone' | 'modal' = 'standalone';
   /**
-   * Unique user code
+   * Unique user token for database authentication. Not mandatory. If the token is empty, the browser token will be used.
    */
-  @Prop() token: string;
+  @Prop() token: string = null;
   /**
    * Unique questionnaire code
    */
@@ -69,6 +69,7 @@ export class Feedback {
   @State() error: boolean = false;
   @State() mainError: boolean = false;
   @State() closedError: boolean = false;
+  @State() tokenError: boolean = false;
   @State() processing: boolean = false;
   @State() isDirty: boolean = false;
   @State() customerHash: number = 0;
@@ -88,7 +89,16 @@ export class Feedback {
       await loadDesignSystemLibrary(this.host);
       this.govDesignSystemLoaded = true;
       this.questionnaire = await loadQuestionnaire(this.code);
-      this.customerHash = createCustomerIdForQuestionnaire(this.questionnaire);
+
+      if (this.customToken) {
+        const verifyStatus = await verifyToken(this.token);
+        if (verifyStatus === false) {
+          this.tokenError = true;
+        }
+      } else {
+        this.customerHash = createCustomerIdForQuestionnaire(this.questionnaire);
+      }
+
       if (this.questionnaire) {
         this.closedError = isQuestionnaireClosed(this.questionnaire);
       }
@@ -97,6 +107,10 @@ export class Feedback {
       this.mainError = true;
       this.mpsvLoadError.emit(e);
     }
+  }
+
+  get customToken(): string | null {
+    return typeof this.token === 'string' && this.token.length ? this.token : null;
   }
 
   private validateQuestions() {
@@ -119,7 +133,7 @@ export class Feedback {
 
     const contentRender = () => {
       const isModal = this.presentation === 'modal';
-      if (isQuestionnaireFilled(this.customerHash)) {
+      if (isQuestionnaireFilled(this.customerHash) || this.tokenError) {
         return filledErrorTemplate();
       }
       if (this.mainError) {
@@ -194,7 +208,7 @@ export class Feedback {
         this.error = false;
         this.processing = true;
         const data = prepareAnswersForSubmit(this.questionnaire, this.answers);
-        data.token = this.token;
+        data.token = this.customToken ? this.token : this.customerHash.toString();
         await submitQuestionnaire(data);
         addToFilledQuestionnaires(this.customerHash);
         this.success = true;
