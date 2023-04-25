@@ -5,11 +5,16 @@ import { Answer, AnswerControl, AnswerError } from '../../schema/Answer';
 import { prepareAnswersForSubmit, validateClientAnswers } from '../../helpers/answer';
 import { Dotaznik } from '../../schema/generated/types';
 import { loadQuestionnaire, submitQuestionnaire } from '../../api';
-import { errorTemplate, infoErrorTemplate, mainErrorTemplate } from '../templates/Error';
+import { errorTemplate, filledErrorTemplate, infoErrorTemplate, mainErrorTemplate } from '../templates/Error';
 import { successTemplate } from '../templates/Success';
 import { questionnaireTemplates } from '../templates/Questionaire';
 import { isQuestionnaireClosed } from '../../helpers/questionnaire';
 import { GovModalElement } from '../../schema/Gov';
+import {
+  addToFilledQuestionnaires,
+  createCustomerIdForQuestionnaire,
+  isQuestionnaireFilled,
+} from '../../helpers/control';
 
 @Component({
   tag: 'mpsv-feedback',
@@ -66,6 +71,7 @@ export class Feedback {
   @State() closedError: boolean = false;
   @State() processing: boolean = false;
   @State() isDirty: boolean = false;
+  @State() customerHash: number = 0;
   @State() answers: Answer[] = [];
   @State() controls: AnswerControl[] = [];
   @State() errors: AnswerError[] = [];
@@ -82,6 +88,7 @@ export class Feedback {
       await loadDesignSystemLibrary(this.host);
       this.govDesignSystemLoaded = true;
       this.questionnaire = await loadQuestionnaire(this.code);
+      this.customerHash = createCustomerIdForQuestionnaire(this.questionnaire);
       if (this.questionnaire) {
         this.closedError = isQuestionnaireClosed(this.questionnaire);
       }
@@ -112,6 +119,9 @@ export class Feedback {
 
     const contentRender = () => {
       const isModal = this.presentation === 'modal';
+      if (isQuestionnaireFilled(this.customerHash)) {
+        return filledErrorTemplate();
+      }
       if (this.mainError) {
         return mainErrorTemplate();
       }
@@ -185,6 +195,7 @@ export class Feedback {
         const data = prepareAnswersForSubmit(this.questionnaire, this.answers);
         data.token = this.token;
         await submitQuestionnaire(data);
+        addToFilledQuestionnaires(this.customerHash);
         this.success = true;
         this.mpsvSent.emit(this.questionnaire);
       } catch (e) {

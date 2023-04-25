@@ -43,3 +43,18 @@ export const infoErrorTemplate = () => {
     </div>
   );
 };
+
+export const filledErrorTemplate = () => {
+  return (
+    <div class={'mpsv-form__info'}>
+      <gov-spacer size={'l'}></gov-spacer>
+      <gov-empty>
+        <gov-icon slot='icon' name='confusion' type='complex'></gov-icon>
+        <p class='gov-text--4xl gov-mb--unset'>Dotazník vyplněn</p>
+        <p class='gov-text--l gov-color--secondary-700 gov-mb--unset'>
+          Litujeme, dotazník jste již vyplnil/a.
+        </p>
+      </gov-empty>
+    </div>
+  );
+};
